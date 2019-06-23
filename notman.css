@@ -1,0 +1,32 @@
+table{
+	table-layout: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	position: absolute;
+	padding: 2px;
+	border: 2px solid black;
+}
+
+td{
+	width: 40px;
+	height: 40px;
+	border: 2px solid black;
+}
+
+.notblock{
+	background-color: black;
+}
+
+.block{
+	background-color: grey;
+	cursor: pointer;
+}
+
+.block:hover{
+	filter: brightness(.8);
+}
+
+.block:active{
+	filter: brightness(.5);
+}
