@@ -9,9 +9,10 @@ table{
 }
 
 td{
-	width: 40px;
-	height: 40px;
+	width: 32px;
+	height: 32px;
 	border: 2px solid black;
+	padding: 0;
 }
 
 .notblock{
@@ -29,4 +30,10 @@ td{
 
 .block:active{
 	filter: brightness(.5);
+}
+
+.enemy{
+	width: 32px;
+	height: 32px;
+	position: absolute;
 }
