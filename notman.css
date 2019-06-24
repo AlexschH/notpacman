@@ -1,11 +1,32 @@
-table{
-	table-layout: fixed;
+body{
+	font-family: Arial, Helvetica, sans-serif
+}
+
+#gamefield-container{
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	position: absolute;
+}
+
+#gamefield{
+	table-layout: fixed;
 	padding: 2px;
 	border: 2px solid black;
+}
+
+#count{
+	text-align: center
+}
+
+#reset{
+	font-weight: bold;
+	text-align: center;
+	cursor: pointer;
+}
+
+#reset:active{
+	transform: scale(1.2)
 }
 
 td{
@@ -16,15 +37,18 @@ td{
 }
 
 .notblock{
-	background-color: black;
+	background-image: url("Not Block.gif");
+	background-size: contain;
 }
 
-.block{
-	background-color: grey;
+.block{	
+	background-image: url("Block.gif");
+	background-size: contain;
 	cursor: pointer;
 }
 
 .block:hover{
+	background-image: url("Block Hover.gif");
 	filter: brightness(.8);
 }
 
@@ -32,8 +56,9 @@ td{
 	filter: brightness(.5);
 }
 
-.enemy{
+.enemy, .star{
 	width: 32px;
 	height: 32px;
 	position: absolute;
+	pointer-events: none;
 }

@@ -2,6 +2,10 @@ var tiles
 var enemies
 var stars
 var currentLevel
+var stars
+var player
+var currentLevelID = 0
+var starsRemaining
 
 var orientations = {
 	left: "left",
@@ -29,10 +33,15 @@ var enemyTypes = {
 }
 	
 var levels = [
-	{name: "Introduction", size: 3, layout: [
+	{name: "Introduction", sizeX: 3, sizeY: 3, layout: [
 		[{type: blockTypes.tile, enemy: enemyTypes.notman, orientation: orientations.right}, {type: blockTypes.tile}, {type: blockTypes.block}],
 		[{type: blockTypes.notblock}, {type: blockTypes.notblock}, {type: blockTypes.block}],
 		[{type: blockTypes.tile, stars: 1}, {type: blockTypes.block}, {type: blockTypes.block}]
+	]}, 
+	{name: "Introduction 2", sizeX: 3, sizeY: 4, layout: [
+		[{type: blockTypes.tile, enemy: enemyTypes.notman, orientation: orientations.right}, {type: blockTypes.tile}, {type: blockTypes.block}, {type: blockTypes.block}],
+		[{type: blockTypes.notblock}, {type: blockTypes.notblock}, {type: blockTypes.block}, {type: blockTypes.notblock}],
+		[{type: blockTypes.tile, stars: 1}, {type: blockTypes.block}, {type: blockTypes.block}, {type: blockTypes.block, stars: 1}]
 	]}
 ]
 
@@ -45,13 +54,16 @@ document.addEventListener('keydown', function (event) {
 function newLevel(level){
 	tiles = []
 	enemies = []
+	stars = []
+	starsRemaining = 0
 	currentLevel = levels[level]
-	levelSize = levels[level].size
+	levelSizeX = levels[level].sizeX
+	levelSizeY = levels[level].sizeY
 	document.getElementById("gamefield").innerHTML = ""
-	for(var i = 0; i < levelSize; i++){
+	for(var i = 0; i < levelSizeX; i++){
 		tiles.push([])
 		var row = document.createElement("TR")
-		for(var e = 0; e < levelSize; e++){
+		for(var e = 0; e < levelSizeY; e++){
 			tiles[i].push({type: levels[level].layout[i][e].type, elem: document.createElement("TD")})
 			tiles[i][e].elem.className = tiles[i][e].type
 			tiles[i][e].elem.setAttribute("x", i)
@@ -66,22 +78,32 @@ function newLevel(level){
 				enemies[enemies.length - 1].elem.className = "enemy"
 				document.body.appendChild(enemies[enemies.length - 1].elem)
 			}
+
+			if(levels[level].layout[i][e].stars){
+				stars.push({x: i, y: e, elem: document.createElement("IMG")})
+				stars[stars.length - 1].elem.src = "star.png"
+				stars[stars.length - 1].elem.className = "star"
+				document.body.appendChild(stars[stars.length - 1].elem)
+				starsRemaining++
+			}
 		}
 		document.getElementById("gamefield").appendChild(row)
 	}
+	document.getElementById("starcount").innerHTML = starsRemaining + " Star" + (starsRemaining == 1 ? "" : "s")
+	player = enemies[0]
 	updateSprites()
 }
 
 function processClick(element){
 	if(tiles[element.getAttribute("x")][element.getAttribute("y")].type == blockTypes.block){
 		tiles[element.getAttribute("x")][element.getAttribute("y")].type = blockTypes.tile
+		processTurn()
 	}
-	for(var i = 0; i < levelSize; i++){
-		for(var e = 0; e < levelSize; e++){
+	for(var i = 0; i < levelSizeX; i++){
+		for(var e = 0; e < levelSizeY; e++){
 			tiles[i][e].elem.className = tiles[i][e].type
 		}
 	}
-	updateSprites()
 }
 
 function updateSprites(){
@@ -94,6 +116,10 @@ function updateSprites(){
 		}
 		enemies[i].elem.style.left = tiles[enemies[i].x][enemies[i].y].elem.getBoundingClientRect().x + 2 + "px"
 		enemies[i].elem.style.top = tiles[enemies[i].x][enemies[i].y].elem.getBoundingClientRect().y + 2 + "px"
+	}
+	for(var i = 0; i < stars.length; i++){
+		stars[i].elem.style.left = tiles[stars[i].x][stars[i].y].elem.getBoundingClientRect().x + 2 + "px"
+		stars[i].elem.style.top = tiles[stars[i].x][stars[i].y].elem.getBoundingClientRect().y + 2 + "px"
 	}
 }
 
@@ -156,7 +182,7 @@ function getSurrounding(enemy){
 		}
 	}
 
-	if(enemy.y == currentLevel.size - 1){
+	if(enemy.y == currentLevel.sizeY - 1){
 		base[directions.forward] = true
 	} else {
 		if(tiles[enemy.x][enemy.y + 1].type != blockTypes.tile){
@@ -166,7 +192,7 @@ function getSurrounding(enemy){
 		}
 	}
 
-	if(enemy.x == currentLevel.size - 1){
+	if(enemy.x == currentLevel.sizeX - 1){
 		base[directions.cw] = true
 	} else {
 		if(tiles[enemy.x + 1][enemy.y].type != blockTypes.tile){
@@ -232,7 +258,44 @@ function processTurn(){
 			}	
 		}
 	}
+
+	for(var e = stars.length - 1; e >= 0; e--){
+		if(player.x == stars[e].x && player.y == stars[e].y){
+			starsRemaining--
+			stars[e].elem.style.display = "none"
+			stars.splice(e, 1)
+
+			if(starsRemaining <= 0){
+				endLevel()
+			}
+		}
+	}
+
+	document.getElementById("starcount").innerHTML = starsRemaining + " Star" + (starsRemaining == 1 ? "" : "s")
+
 	updateSprites()
+}
+
+function endLevel(newID){
+	if(newID == undefined){
+		currentLevelID++;
+	} else {
+		currentLevelID = newID
+	}
+	if(currentLevelID >= levels.length){
+		currentLevelID = 0
+	}
+	for(var i = 0; i < enemies.length; i++){
+		enemies[i].elem.style.display = "none"
+	}
+	for(var i = 0; i < stars.length; i++){
+		stars[i].elem.style.display = "none"
+	}
+	newLevel(currentLevelID)
+}
+
+function reset(){
+	endLevel(currentLevelID)
 }
 
 newLevel(0)
