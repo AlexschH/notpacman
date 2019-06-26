@@ -32,6 +32,7 @@ body{
 }
 
 #gamefield{
+	background-color:#F0E3CF;
 	table-layout: fixed;
 	padding: 2px;
 	border: 3px solid #715513;
@@ -53,10 +54,13 @@ body{
 }
 
 td{
+	background-image: radial-gradient(circle, #E8DFD1, #FEF7ED);
+	background-color:#FEF7ED;
 	width: 32px;
 	height: 32px;
 	border: 1px solid #715513;
 	padding: 0;
+	border-radius: 3px;
 }
 
 .notblock{
@@ -72,7 +76,7 @@ td{
 
 .block:hover{
 	background-image: url("Block Hover.gif");
-	filter: brightness(.8);
+	filter: brightness(.9);
 }
 
 .block:active{

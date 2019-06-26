@@ -41,7 +41,7 @@ var levels = [
 	{name: "Introduction 2", sizeX: 3, sizeY: 4, layout: [
 		[{type: blockTypes.tile, enemy: enemyTypes.notman, orientation: orientations.right}, {type: blockTypes.tile}, {type: blockTypes.block}, {type: blockTypes.block}],
 		[{type: blockTypes.notblock}, {type: blockTypes.notblock}, {type: blockTypes.block}, {type: blockTypes.notblock}],
-		[{type: blockTypes.tile, stars: 1}, {type: blockTypes.block}, {type: blockTypes.block}, {type: blockTypes.block, stars: 1}]
+		[{type: blockTypes.tile, stars: 1}, {type: blockTypes.block}, {type: blockTypes.block}, {type: blockTypes.tile, stars: 1}]
 	]}
 ]
 
